@@ -20,7 +20,7 @@ public class Maze
         for (int r = 0; r < board.length; r++)
             for (int c = 0; c < board[r].length; c++){
                 Cell cell = board[r][c];
-                StdDraw.setPenColor(cell.getColor());
+                Std Draw.setPenColor(cell.getColor());
                 StdDraw.filledSquare(cell.getX(), cell.getY(), cell.getRadius());
             }
             StdDraw.show();
@@ -28,59 +28,27 @@ public class Maze
 
     public boolean findPath(int row, int col)
     {
-        boolean isFinished = false;
-
-        //ensure that we can explore this cell
-        if (isValid(row, col))
-        {
-            //mark the cell as visisted
-            board[row][col].visitCell();
-            this.draw();
-            StdDraw.pause(DELAY);
-
-            //are we at the end of the maze?
-            if (isExit(row, col))
-                isFinished = true;
-
-            //we are not the end, so let's explore the 4 adjacent cells
-            else{
-                //try the cell below
-                isFinished = findPath(row + 1, col);
-
-                //if not finished yet, try to the right
-                if (!isFinished)
-                    isFinished = findPath(row, col + 1);
-                //if not finished yet, try above
-                if (!isFinished)
-                    isFinished = findPath((row - 1), col);
-                //if not finished yet, try to the left
-                if (!isFinished)
-                    isFinished = findPath((row), col - 1);
-            }
-
-            //if we have reached the end, this current cell is part of the final path
-            if (isFinished)
-                board[row][col].becomePath();
-            this.draw();
-            StdDraw.pause(DELAY);
-
-            return isFinished;
-        }
-        return isFinished;
+        return false;
     }
 
     private boolean isValid(int row, int col)
     {
         //ensure that (row, col) is a valid location in grid
-        if (row >= 0 && row < board.length && col >= 0 && col < board[row].length)
-            //ensure that the cell is open and hasn't been visited yet
-            return(!board[row][col].isWall() && !board[row][col].isVisited());
+        if (row >= 0 && row < board.length && col >= 0 && col < board[row].length) {
+            if (board[row][col].isWall() || board[row][col].isVisited())
+                return false;
+            else
+                return true;
+        }
         return false;
     }
 
     private boolean isExit(int row, int col)
     {
-        return row == board.length - 1 && col == board[row].length - 1;
+        if (row == board.length - 1 && col == board[row].length - 1)
+            return true;
+        else
+            return false;
     }
 
     public static void main(String[] args) {
