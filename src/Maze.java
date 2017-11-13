@@ -20,15 +20,42 @@ public class Maze
         for (int r = 0; r < board.length; r++)
             for (int c = 0; c < board[r].length; c++){
                 Cell cell = board[r][c];
-                Std Draw.setPenColor(cell.getColor());
+                StdDraw.setPenColor(cell.getColor());
                 StdDraw.filledSquare(cell.getX(), cell.getY(), cell.getRadius());
             }
             StdDraw.show();
     }
 
-    public boolean findPath(int row, int col)
-    {
-        return false;
+    public boolean findPath(int row, int col) {
+        boolean isFinished = false;
+
+        if (isValid(row, col)) {
+            board[row][col].visitCell();
+
+            this.draw();
+            StdDraw.pause(DELAY);
+
+            if(isExit(row, col))
+            {
+                board[row][col].becomePath();
+                isFinished = true;
+            }
+
+            if (!isFinished) {
+                isFinished = findPath(row + 1, col);
+                if (!isFinished)
+                    isFinished = findPath(row, col + 1);
+                if (!isFinished)
+                    isFinished = findPath(row, col - 1);
+                if (!isFinished)
+                    isFinished = findPath(row - 1, col);
+            }
+        }
+        if(isFinished)
+        {
+            board[row][col].becomePath();
+        }
+            return isFinished;
     }
 
     private boolean isValid(int row, int col)
@@ -50,19 +77,18 @@ public class Maze
         else
             return false;
     }
-
     public static void main(String[] args) {
         StdDraw.enableDoubleBuffering();
         int[][] maze = {{1,1,0,0,0,0,0,0,0,0},
-                        {0,1,1,1,1,0,1,1,1,0},
-                        {0,1,1,1,1,0,1,1,0,0},
-                        {0,1,0,1,1,1,1,1,1,0},
-                        {0,1,0,0,0,0,0,1,1,0},
-                        {0,1,1,0,1,1,1,1,1,0},
-                        {0,0,1,0,0,1,0,1,0,0},
-                        {0,1,1,0,1,1,0,1,1,0},
-                        {0,1,1,0,1,1,0,1,1,0},
-                        {0,0,0,0,0,0,0,0,1,1}};
+                {0,1,1,1,1,0,1,1,1,0},
+                {0,1,1,1,1,0,1,1,0,0},
+                {0,1,0,1,1,1,1,1,1,0},
+                {0,1,0,0,0,0,0,1,1,0},
+                {0,1,1,0,1,1,1,1,1,0},
+                {0,0,1,0,0,1,0,1,0,0},
+                {0,1,1,0,1,1,0,1,1,0},
+                {0,1,1,0,1,1,0,1,1,0},
+                {0,0,0,0,0,0,0,0,1,1}};
         Maze geerid = new Maze(maze.length, maze[0].length, maze);
         geerid.draw();
         geerid.findPath(0, 0);
