@@ -1,7 +1,13 @@
+import static java.lang.System.*;
+import java.util.Scanner;
+import java.io.File;
+import java.lang.Exception;
 public class Maze
 {
     private Cell[][] board;
     private final int DELAY = 200;
+    private int prevRow = 0;
+    private int prevCol = 0;
 
     public Maze(int rows, int cols, int[][] map){
         StdDraw.setXscale(0, cols);
@@ -31,6 +37,10 @@ public class Maze
 
         if (isValid(row, col)) {
             board[row][col].visitCell();
+            board[prevRow][prevCol].setColor(StdDraw.RED);
+            board[row][col].setColor(StdDraw.BLUE);
+            prevRow = row;
+            prevCol = col;
 
             this.draw();
             StdDraw.pause(DELAY);
@@ -77,9 +87,37 @@ public class Maze
         else
             return false;
     }
+    public static int[][] readMaze() throws Exception {
+            int size = 10;
+            String[][] dataSet = new String[size][size];
+            int[][] numSet = new int[size][size];
+            String fileName = "Workbook1";
+            String extension = ".csv";
+            File inputFile = new File(fileName + extension);
+            Scanner inputObject = new Scanner(inputFile);
+            inputObject.useDelimiter(",");
+            System.out.println("delim is:" + inputObject.delimiter());
+            int row = 0;
+            // process the entire file, with a loop
+            // populate your data structures
+            while (inputObject.hasNextLine() == true) {
+                dataSet[row] = (inputObject.nextLine()).split(",");
+                row++;
+            }
+            for (int r = 0; r < dataSet.length; r++) {
+                for (int c = 0; c < dataSet[1].length; c++) {
+                    dataSet[r][c] = dataSet[r][c].trim();
+                    numSet[r][c] = Integer.parseInt(dataSet[r][c]);
+                }
+                System.out.println();
+            }
+            inputObject.close();
+            return numSet;
+
+        }
     public static void main(String[] args) {
         StdDraw.enableDoubleBuffering();
-        int[][] maze = {{1,1,0,0,0,0,0,0,0,0},
+        int[][] maze ={{1,1,0,0,0,0,0,0,0,0},
                 {0,1,1,1,1,0,1,1,1,0},
                 {0,1,1,1,1,0,1,1,0,0},
                 {0,1,0,1,1,1,1,1,1,0},
